@@ -2,6 +2,10 @@
 
 A focused account-research app built by Nathan Varghese for the DeepSpace AI-Native GTM Engineer build exercise.
 
+Live app: https://signalbrief-nathan.app.space
+
+Repository: https://github.com/nsvarghese/signalbrief
+
 Enter one company domain, describe what you sell, and supply up to three fit criteria. SignalBrief finds company-owned evidence, assesses fit, proposes a cautious outreach angle, and saves an editable opening message alongside its sources.
 
 ## Run
@@ -78,3 +82,4 @@ Next improvements would be better source selection (especially clean changelog e
 ## Agent and applicant work
 
 The coding agent implemented the scaffold extensions, provider orchestration, UI, tests, documentation, and deployment workflow. An independent agent reviewed authorization and draft handling. Nathan's personal checks must be recorded separately in `docs/NATHAN_REVIEW.md`; agent-run tests are not presented as Nathan's own verification.
+

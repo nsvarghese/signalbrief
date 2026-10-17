@@ -1,5 +1,9 @@
 # Submission note — working draft
 
+Live URL: https://signalbrief-nathan.app.space
+
+Repository: https://github.com/nsvarghese/signalbrief
+
 I built SignalBrief, an account-research app that turns one company domain and a short ICP into a saved GTM brief with source-linked fit assessments, a possible outreach trigger, and an editable opening message.
 
 It uses three DeepSpace integrations: Exa to discover relevant company-owned pages, Firecrawl to extract homepage content, and Anthropic to synthesize a structured brief. DeepSpace provides authentication, private real-time records, server actions, and deployment. Evidence is persisted before synthesis so a model failure can be retried without repeating research.
@@ -11,3 +15,4 @@ The coding agent implemented the app, tests, and deployment workflow. It also us
 [Replace this paragraph with Nathan's actual verification and any personal changes. Do not submit it as a completed claim. See NATHAN_REVIEW.md.]
 
 Known limits: excerpt selection can miss important context; citations are structurally validated but model interpretations still require review; the notebook shows up to fifty saved briefs. Next I would improve source selection and evidence-quality checks.
+

@@ -17,6 +17,8 @@ export default defineConfig({
   testMatch: '**/*.spec.ts',
   timeout: 30_000,
   retries: 0,
+  // The SDK's local login-state cache is shared between specs; serialize its writers.
+  workers: 1,
   use: {
     baseURL: BASE_URL,
     headless: true,
@@ -35,4 +37,5 @@ export default defineConfig({
     stderr: 'pipe',
   },
 })
+
 
