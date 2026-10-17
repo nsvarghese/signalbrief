@@ -22,6 +22,9 @@ test('live research persists edits and stays private across two users', async ({
   try {
     await expect(alice.page.locator('.success-note')).toContainText('Analysis saved.', { timeout: 120_000 })
     await expect(alice.page.getByLabel('Account brief')).toContainText('linear.app')
+    // Regression for a real output review: missing onboarding evidence is not a contradiction.
+    await expect(alice.page.locator('.assessment').nth(1).locator('.verdict')).toHaveText(/supported|unclear/)
+    await expect(alice.page.locator('.brief-paper section').first()).not.toContainText(/seller.s claim|seller.s description/i)
     await expect(alice.page.locator('.source')).not.toHaveCount(0)
     const draft = `__test-${Date.now()}__ My personally reviewed opening message.`
     await alice.page.getByLabel('Edit opening message').fill(draft)
@@ -44,4 +47,5 @@ test('live research persists edits and stays private across two users', async ({
     if (await remove.isVisible()) await remove.click()
   }
 })
+
 
