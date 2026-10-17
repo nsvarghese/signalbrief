@@ -1,0 +1,333 @@
+@import "tailwindcss" source(none);
+@import "./themes.css";
+
+/* Scan local source + SDK components for Tailwind class usage */
+@source "./**/*.{ts,tsx}";
+@source "../node_modules/deepspace/dist/**/*.js";
+
+/*
+ * Theming — pure shadcn/ui CSS variables with [data-theme] selectors.
+ *
+ * The @theme block below holds the default theme (slate). All other themes
+ * live in `themes.css` as `[data-theme="<id>"]` override blocks. Switching
+ * themes = changing the data-theme attribute on <html> in index.html. No
+ * JS, no FOUC.
+ *
+ * Status colors (success, warning, info) are intentionally NOT themed —
+ * they stay consistent across every preset.
+ */
+@theme {
+  /* shadcn core tokens — slate (default): neutral gray on near-black, indigo accent */
+  --color-background: #0a0a0a;
+  --color-foreground: #e8eaed;
+  --color-card: #161616;
+  --color-card-foreground: #e8eaed;
+  --color-popover: #161616;
+  --color-popover-foreground: #e8eaed;
+  --color-primary: #818cf8;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #1e1e1e;
+  --color-secondary-foreground: #e8eaed;
+  --color-muted: #1e1e1e;
+  --color-muted-foreground: #9ca3af;
+  --color-accent: #262626;
+  --color-accent-foreground: #e8eaed;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+  --color-border: rgba(60, 64, 67, 0.6);
+  --color-input: rgba(60, 64, 67, 0.6);
+  --color-ring: #818cf8;
+  --radius: 0.5rem;
+
+  /*
+   * Map the rounded-* utilities onto --radius so a theme (or you) can change
+   * the app's shape language in one place. At the default 0.5rem these equal
+   * Tailwind's stock values, so there is no visual change until a theme
+   * overrides --radius.
+   */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+
+  /* Status colors — constant across all themes */
+  --color-success: #10b981;
+  --color-success-foreground: #ffffff;
+  --color-warning: #f59e0b;
+  --color-warning-foreground: #ffffff;
+  --color-info: #3b82f6;
+  --color-info-foreground: #ffffff;
+
+  /*
+   * Shadows — slate (default). Each theme in themes.css tunes these.
+   *
+   * Toned down 2026-05: previous values were 8px/12px offset with
+   * 32px/40px blur which read as a heavy halo under every Card on
+   * the page. New values are Linear/Stripe-style: barely-there at
+   * rest, slightly more present on hover.
+   *
+   * IMPORTANT: starter components (`Card`, `Dialog`, `CardGrid`,
+   * `Navigation`, `Toast`) intentionally use literal shadow values
+   * via `shadow-[…]` arbitrary-value classes, NOT the
+   * `shadow-card` / `shadow-card-hover` token classes Tailwind v4
+   * generates from this @theme block. Why: Tailwind's @theme directive
+   * compiles these tokens into the utility-class definitions at build
+   * time, and runtime [data-theme] overrides don't always cancel the
+   * baked baseline cleanly — apps switching themes were getting the
+   * slate value carried forward on the compiled `shadow-card` class.
+   * Sidestepping the token system in starter components is the
+   * deterministic fix. See docs/platform/theming-shadows.md.
+   */
+  --shadow-card: 0 1px 2px 0 rgba(0, 0, 0, 0.12);
+  --shadow-card-hover: 0 2px 8px 0 rgba(0, 0, 0, 0.16);
+
+  /* Shell tokens: the area behind a multi-panel layout, and the raised
+     surface a page renders into. Used by templates whose (app)/_layout is a
+     shell (e.g. copilot's sidebar | panel | chat); a single-column layout
+     simply doesn't reference them. In every theme keep the panel reading as
+     elevated: dark → panel lighter than shell; light → white panel on a
+     faintly darker shell. */
+  --color-shell: #0a0a0a;
+  --color-shell-panel: #161616;
+
+  /* Animations */
+  --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Theme override blocks live in `themes.css` — imported above. */
+
+/*
+ * Animation keyframes for shadcn components.
+ * These replace the tailwindcss-animate plugin which is not compatible with Tailwind v4.
+ */
+@keyframes animate-in {
+  from { opacity: var(--tw-enter-opacity, 1); transform: translate3d(var(--tw-enter-translate-x, 0), var(--tw-enter-translate-y, 0), 0) scale3d(var(--tw-enter-scale, 1), var(--tw-enter-scale, 1), var(--tw-enter-scale, 1)) rotate(var(--tw-enter-rotate, 0)); }
+}
+
+@keyframes animate-out {
+  to { opacity: var(--tw-exit-opacity, 1); transform: translate3d(var(--tw-exit-translate-x, 0), var(--tw-exit-translate-y, 0), 0) scale3d(var(--tw-exit-scale, 1), var(--tw-exit-scale, 1), var(--tw-exit-scale, 1)) rotate(var(--tw-exit-rotate, 0)); }
+}
+
+@utility animate-in {
+  animation-name: animate-in;
+  animation-duration: 150ms;
+  /* `both` prevents a one-frame flash before entry / after exit. */
+  animation-fill-mode: both;
+  --tw-enter-opacity: initial;
+  --tw-enter-scale: initial;
+  --tw-enter-translate-x: initial;
+  --tw-enter-translate-y: initial;
+  --tw-enter-rotate: initial;
+}
+
+@utility animate-out {
+  animation-name: animate-out;
+  animation-duration: 150ms;
+  /* `both` prevents a one-frame flash before entry / after exit. */
+  animation-fill-mode: both;
+  --tw-exit-opacity: initial;
+  --tw-exit-scale: initial;
+  --tw-exit-translate-x: initial;
+  --tw-exit-translate-y: initial;
+  --tw-exit-rotate: initial;
+}
+
+@utility fade-in-0 { --tw-enter-opacity: 0; }
+@utility fade-out-0 { --tw-exit-opacity: 0; }
+@utility zoom-in-95 { --tw-enter-scale: .95; }
+@utility zoom-out-95 { --tw-exit-scale: .95; }
+@utility slide-in-from-top-2 { --tw-enter-translate-y: -0.5rem; }
+@utility slide-in-from-bottom-2 { --tw-enter-translate-y: 0.5rem; }
+@utility slide-in-from-left-2 { --tw-enter-translate-x: -0.5rem; }
+@utility slide-in-from-right-2 { --tw-enter-translate-x: 0.5rem; }
+@utility slide-out-to-top-2 { --tw-exit-translate-y: -0.5rem; }
+@utility slide-out-to-bottom-2 { --tw-exit-translate-y: 0.5rem; }
+@utility slide-out-to-left-2 { --tw-exit-translate-x: -0.5rem; }
+@utility slide-out-to-right-2 { --tw-exit-translate-x: 0.5rem; }
+
+
+/*
+ * Custom base styles — must be in @layer base so utility classes can override.
+ */
+@layer base {
+  html {
+    /* Default to dark for native form controls (calendar icons, scrollbars).
+     * Light themes opt into `color-scheme: light` in themes.css. */
+    color-scheme: dark;
+  }
+
+  html, body, #root {
+    min-height: 100vh;
+    background-color: var(--color-background);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 14px;
+    color: var(--color-foreground);
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 0.25rem;
+    background-color: var(--color-border);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-muted-foreground);
+  }
+
+  /* Selection styling */
+  ::selection {
+    background-color: var(--color-primary);
+    color: var(--color-primary-foreground);
+  }
+
+  /*
+   * Focus indication is intentionally NOT applied app-wide via a
+   * `*:focus-visible` rule. Doing so paints a colored outline onto
+   * every focusable element on the page — including programmatically
+   * focusable containers like Radix DismissableLayer wrappers,
+   * dialog overlays, and any element with `tabindex={-1}` used for
+   * scroll containment. The result reads as "the entire panel /
+   * dialog is selected" the moment a child button is clicked.
+   *
+   * Per-component focus indicators (e.g. shadcn's
+   * `focus-visible:ring-1` on Button, `focus-visible:border-ring` on
+   * Input / Textarea / Select) are sufficient for keyboard
+   * accessibility and don't bleed onto containers.
+   *
+   * If you DO need a global indicator for very keyboard-heavy apps,
+   * scope it tightly — e.g. only to interactive elements:
+   *
+   *   a:focus-visible,
+   *   button:focus-visible,
+   *   [role="button"]:focus-visible,
+   *   input:focus-visible,
+   *   select:focus-visible,
+   *   textarea:focus-visible {
+   *     outline: 2px solid var(--color-primary);
+   *     outline-offset: 2px;
+   *   }
+   *
+   * — never `*`.
+   */
+
+  /* Prevent 300ms tap delay on mobile */
+  a, button, [role="button"], input, select, textarea {
+    touch-action: manipulation;
+  }
+}
+
+/* SignalBrief: an evidence notebook with a restrained research-desk layout. */
+:root { font-family: 'Segoe UI', system-ui, sans-serif; }
+button, a, input, textarea { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+button:disabled { cursor: wait; opacity: .55; }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid #628d6d; outline-offset: 4px; }
+.eyebrow { font: 600 10px/1.6 Consolas, monospace; letter-spacing: .14em; color: #47644f; }
+.sb-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #245b43; background: #245b43; color: white; padding: 11px 16px; border-radius: 4px; font: 600 13px/1.4 'Segoe UI', sans-serif; text-decoration: none; transition: background .15s; }
+.sb-button:hover:not(:disabled) { background: #17452f; }
+.sb-button.secondary { background: transparent; color: #245b43; }
+.sb-button.secondary:hover:not(:disabled) { background: #e5e9df; }
+.button-row { display: flex; gap: 8px; margin-top: 12px; }
+.fineprint { font-size: 11px; line-height: 1.7; color: #626e64; }
+.workspace { display: grid; grid-template-columns: minmax(275px, 340px) minmax(0, 1fr); min-height: 100%; max-width: 1500px; margin: auto; }
+.research-panel { padding: 35px 26px; background: #edf0e6; border-right: 1px solid #d3d8cc; }
+.research-panel h1 { font: 500 34px/1.16 Georgia, serif; letter-spacing: -.035em; margin: 12px 0; }
+.panel-intro { font-size: 13px; line-height: 1.6; color: #5b665c; margin-bottom: 28px; }
+.research-panel label { display: block; font-weight: 600; font-size: 12px; margin: 19px 0 7px; }
+.research-panel label span { float: right; font-size: 10px; font-weight: 400; color: #63705f; }
+.research-panel input, .research-panel textarea, .draft-section textarea { width: 100%; border: 1px solid #bdc8b9; border-radius: 4px; background: #fffefa; padding: 11px; font-size: 13px; line-height: 1.6; resize: vertical; color: #263d2e; }
+.research-panel input:focus, .research-panel textarea:focus, .draft-section textarea:focus { outline: 2px solid #6a8e71; outline-offset: 1px; }
+.research-panel form > .sb-button { width: 100%; margin-top: 19px; }
+.research-panel form > .fineprint { margin-top: 12px; }
+.text-button { font-size: 12px; color: #245b43; text-decoration: underline; text-underline-offset: 4px; margin-top: 20px; }
+.saved-heading { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #cbd4c6; padding-top: 26px; margin-top: 27px; margin-bottom: 10px; }
+.saved-heading h2 { font-size: 12px; font-weight: 600; }
+.saved-heading > span { font: 11px Consolas, monospace; }
+.saved-list { list-style: none; padding: 0; margin: 0; }
+.saved-list button { display: block; width: 100%; text-align: left; padding: 12px; border-left: 2px solid transparent; }
+.saved-list button:hover, .saved-list button[aria-pressed="true"] { background: #dfe6d9; border-left-color: #245b43; }
+.saved-list strong { display: block; font-size: 13px; overflow-wrap: anywhere; }
+.saved-list span { display: block; font-size: 10px; color: #5b665c; margin-top: 4px; }
+.document-panel { padding: 28px 40px 60px; min-width: 0; background: #f3f2ed; }
+.feedback { max-width: 800px; margin: auto; }
+.feedback:empty { display: none; }
+.progress, .error-note, .success-note, .warning-note { padding: 13px 16px; border: 1px solid; border-radius: 4px; font-size: 12px; line-height: 1.7; margin: 0 auto 16px; max-width: 800px; }
+.progress { border-color: #a5baa0; background: #e9efe1; }
+.progress span { display: block; font-size: 11px; color: #576851; }
+.error-note { border-color: #d6a496; background: #fff0e9; color: #8c3325; }
+.success-note { border-color: #9cbda4; background: #e7f0e5; color: #265b36; }
+.warning-note { border-color: #cfbb80; background: #fcf5dd; color: #78601d; }
+.brief-paper { max-width: 800px; margin: auto; background: #fffefa; padding: 36px 40px; border: 1px solid #d8d9cc; box-shadow: 0 3px 15px #24352806; }
+.paper-mast { display: flex; justify-content: space-between; gap: 10px; border-bottom: 2px solid #2e5038; padding-bottom: 13px; font: 9px/1.4 Consolas, monospace; color: #53674f; letter-spacing: .08em; }
+.brief-paper h2 { font: 500 36px/1.2 Georgia, serif; letter-spacing: -.03em; margin: 25px 0 16px; overflow-wrap: anywhere; }
+.brief-paper h3 { font-size: 11px; text-transform: uppercase; letter-spacing: .09em; color: #3c573e; margin: 0 0 10px; font-weight: 700; }
+.brief-paper section { margin-top: 28px; }
+.brief-paper p { font-size: 13px; line-height: 1.85; color: #455047; }
+.brief-paper .sample-note { background: #f5f0df; color: #786331; padding: 9px 12px; font-size: 11px; }
+.decision { margin-top: 23px; border-left: 3px solid #5a7f55; padding: 3px 0 3px 13px; }
+.decision strong { display: block; font-size: 13px; font-weight: 600; }
+.decision span { display: block; font-size: 11px; color: #65705f; margin-top: 4px; line-height: 1.6; }
+.refs { display: inline-flex; gap: 4px; margin-left: 4px; }
+.refs a { display: inline-block; font: 10px/1.8 Consolas, monospace; background: #eaf0e3; padding: 0 5px; color: #345f3e; border-bottom: 1px solid #aabb9b; }
+.assessment { padding: 12px 0; border-top: 1px solid #e2e5da; }
+.assessment > div { display: flex; gap: 9px; align-items: center; }
+.assessment strong { font-size: 12px; font-weight: 600; }
+.assessment p { margin: 7px 0 0; }
+.verdict { font: 9px/1.4 Consolas, monospace; text-transform: uppercase; border: 1px solid #c6cfbc; padding: 3px 5px; white-space: nowrap; }
+.verdict.supported { background: #edf3e5; color: #3d6334; }
+.verdict.unclear { background: #f9f1dc; color: #826322; }
+.verdict.contradicted { background: #f8e6df; color: #913d2c; }
+.section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.section-heading > span { font-size: 10px; color: #6a7568; }
+.draft-section { padding: 20px; background: #f2f4eb; border: 1px solid #d9dfce; }
+.draft-section .draft-copy { font-family: Georgia, serif; font-size: 15px; }
+.unknowns { padding-left: 18px; font-size: 12px; line-height: 1.9; color: #63705e; list-style: disc; }
+.source { border-top: 1px solid #dce1d3; scroll-margin-top: 20px; }
+.source summary { cursor: pointer; display: flex; gap: 12px; padding: 13px 0; font-size: 12px; line-height: 1.5; }
+.source summary::before { content: '+'; color: #416143; }
+.source[open] summary::before { content: '−'; }
+.source-id { font: 10px/1.6 Consolas, monospace; color: #446d47; }
+.source small { display: block; font-size: 10px; color: #6f796b; margin-top: 3px; }
+.source-body { margin-left: 25px; padding-bottom: 16px; }
+.source-body a { font-size: 11px; color: #245b43; text-decoration: underline; }
+.source-body pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 11px/1.8 Consolas, monospace; background: #f3f5ee; padding: 13px; max-height: 280px; overflow: auto; }
+.paper-footer { margin-top: 30px; padding-top: 17px; border-top: 2px solid #d7ddcf; font: 9px/1.6 Consolas, monospace; color: #63705d; }
+.evidence-ready { padding: 24px 0; }
+.desk-empty { padding: 110px 40px; max-width: 650px; margin: auto; }
+.desk-empty h2 { font: 500 44px/1.15 Georgia, serif; letter-spacing: -.03em; margin: 20px 0; }
+.desk-empty p { max-width: 390px; font-size: 14px; line-height: 1.8; color: #5c6a59; margin-bottom: 24px; }
+.landing { padding: 0 50px; max-width: 1500px; margin: auto; }
+.landing-nav { display: flex; align-items: center; gap: 24px; justify-content: space-between; padding: 23px 0; border-bottom: 1px solid #cbd2c4; }
+.brand { font: 600 23px/1 Georgia, serif; text-decoration: none; }
+.brand-dot { color: #5d8056; font-size: 11px; vertical-align: super; margin-left: 4px; }
+.landing-nav > span { font: 9px/1.5 Consolas, monospace; letter-spacing: .1em; color: #63705d; }
+.landing-grid { display: grid; grid-template-columns: minmax(260px, .8fr) minmax(0, 1.2fr); gap: 55px; padding: 50px 0; align-items: start; }
+.landing-intro { padding: 60px 0 0; position: sticky; top: 30px; }
+.landing-intro h1 { font: 500 57px/1.1 Georgia, serif; letter-spacing: -.05em; margin: 22px 0; }
+.landing-intro > p:not(.fineprint) { max-width: 365px; font-size: 15px; line-height: 1.85; color: #5c6a59; margin: 0 0 28px; }
+.landing-intro > .fineprint { margin-top: 20px; }
+.method-note { margin-top: 45px; padding-top: 20px; border-top: 1px solid #cbd2c4; }
+.method-note > span { font: 9px Consolas, monospace; color: #5b7055; letter-spacing: .1em; }
+.method-note ol { padding: 16px 0 0 18px; list-style: decimal; font-size: 12px; line-height: 2.2; color: #50634c; }
+.landing-grid .brief-paper { padding: 26px 30px; }
+.landing-grid .brief-paper h2 { font-size: 29px; }
+.landing-footer { font-size: 10px; color: #67725f; border-top: 1px solid #cbd2c4; padding: 20px 0; }
+@media (max-width: 1050px) { .document-panel { padding: 24px; } .brief-paper { padding: 28px; } .landing { padding: 0 26px; } .landing-grid { gap: 28px; } .landing-intro h1 { font-size: 45px; } }
+@media (max-width: 760px) { .workspace { display: block; } .research-panel { border-right: 0; border-bottom: 1px solid #cdd3c7; padding: 25px; } .document-panel { padding: 20px 12px; } .brief-paper { padding: 24px 19px; } .brief-paper h2 { font-size: 30px; } .landing-nav > span { display: none; } .landing { padding: 0 18px; } .landing-grid { display: block; padding-top: 10px; } .landing-intro { position: static; padding: 30px 4px; } .landing-intro h1 { font-size: 44px; } .method-note { display: none; } .landing-grid .brief-paper { padding: 24px 19px; } .assessment > div { align-items: start; } .paper-mast { font-size: 8px; } .desk-empty { padding: 50px 16px; } }

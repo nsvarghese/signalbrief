@@ -1,0 +1,25 @@
+[data-theme="signalbrief"] {
+  color-scheme: light;
+  --color-background: #f3f2ed;
+  --color-foreground: #202b25;
+  --color-card: #fffefa;
+  --color-card-foreground: #202b25;
+  --color-popover: #fffefa;
+  --color-popover-foreground: #202b25;
+  --color-primary: #245b43;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #e5e9df;
+  --color-secondary-foreground: #202b25;
+  --color-muted: #eaece4;
+  --color-muted-foreground: #5b665c;
+  --color-accent: #e3e8dc;
+  --color-accent-foreground: #202b25;
+  --color-destructive: #a9362d;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #cdd3c7;
+  --color-input: #cdd3c7;
+  --color-ring: #245b43;
+  --color-shell: #ecefe6;
+  --color-shell-panel: #fffefa;
+  --radius: 0.35rem;
+}
