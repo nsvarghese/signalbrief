@@ -18,7 +18,7 @@ async function action(name: string, params: unknown): Promise<{ recordId: string
 export default function HomePage() {
   const { isSignedIn } = useAuthProfileReady({ requireUser: true })
   const { records, status } = useQuery<BriefData>('briefs', { orderBy: 'createdAt', orderDir: 'desc', limit: 50 })
-  const { putConfirmed, ready } = useMutations<BriefData>('briefs')
+  const { putConfirmed, removeConfirmed, ready } = useMutations<BriefData>('briefs')
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [showSample, setShowSample] = useState(false)
   const [showAuth, setShowAuth] = useState(false)
@@ -44,6 +44,7 @@ export default function HomePage() {
     if (!isSignedIn) { setShowAuth(true); return }
     const input = requestSchema.safeParse({ domain, seller, criteria: criteriaText.split('\n').map(value => value.trim()).filter(Boolean) })
     if (!input.success) { setError(input.error.issues[0]?.message ?? 'Check the research inputs.'); return }
+    if (editedDraft !== null && !window.confirm('Leave your unsaved message edits?')) return
     setBusy('Finding and extracting company evidence…'); setShowSample(false)
     try { const result = await action('research', input.data); setSelectedId(result.recordId); setEditedDraft(null); await synthesize(result.recordId) }
     catch (err) { setError(err instanceof Error ? err.message : 'Research failed. Please try again.'); setBusy('') }
@@ -53,6 +54,13 @@ export default function HomePage() {
     setBusy('Saving edits…'); setError(''); setNotice('')
     try { await putConfirmed(selectedId, { draft: editedDraft }); setNotice('Your edits are saved.'); setEditedDraft(null) }
     catch { setError('Your edits could not be confirmed. Keep this page open and try again.') }
+    finally { setBusy('') }
+  }
+  async function deleteBrief() {
+    if (!selectedId || !window.confirm('Delete this private brief and its saved evidence?')) return
+    setBusy('Deleting brief…'); setError('')
+    try { await removeConfirmed(selectedId); setSelectedId(null); setEditedDraft(null); setNotice('Brief deleted.') }
+    catch { setError('Deletion could not be confirmed. Please try again.') }
     finally { setBusy('') }
   }
   function select(id: string) {
@@ -69,7 +77,7 @@ export default function HomePage() {
         <button className="sb-button primary" type="submit" disabled={!!busy || (isSignedIn && !ready)}>{busy || (isSignedIn ? 'Research account ↗' : 'Sign in to research ↗')}</button>
         <p className="fineprint">Uses Exa, Firecrawl, and Claude through DeepSpace. Demo allowance: 3 research runs and 6 analyses per user per UTC day, within an app-wide cap.</p>
       </form>
-      <button className="text-button" disabled={!!busy} onClick={() => { setShowSample(true); setSelectedId(null); setEditedDraft(null) }}>Explore the fictional example →</button>
+      <button className="text-button" disabled={!!busy} onClick={() => { if (editedDraft !== null && !window.confirm('Leave your unsaved message edits?')) return; setShowSample(true); setSelectedId(null); setEditedDraft(null) }}>Explore the fictional example →</button>
       <div className="saved-heading"><h2>Saved briefs</h2><span>{isSignedIn ? records.length : '—'}</span></div>
       {!isSignedIn ? <p className="fineprint">Sign in to keep a private research notebook.</p> : status === 'loading' ? <p role="status">Loading your notebook…</p> : records.length === 0 ? <p className="fineprint">Your first account brief will appear here. Enter a domain above to begin.</p> : <ul className="saved-list">{records.map(record => <li key={record.recordId}><button disabled={!!busy} aria-pressed={record.recordId === selectedId} onClick={() => select(record.recordId)}><strong>{record.data.domain}</strong><span>{record.data.reportJson ? 'Brief ready' : 'Evidence saved · analysis pending'}</span></button></li>)}</ul>}
     </aside>
@@ -78,10 +86,13 @@ export default function HomePage() {
       {showSample || !isSignedIn ? <BriefView {...example} sample /> : data && parsed ? <>
         {parsed.warnings.map(warning => <p className="warning-note" key={warning}>{warning}</p>)}
         {!parsed.report && <button className="sb-button" disabled={!!busy} onClick={() => synthesize(selected.recordId)}>Generate analysis from saved evidence</button>}
+        <div className="document-tools"><button className="text-button" disabled={!!busy || !ready} onClick={deleteBrief}>Delete brief</button></div>
         <BriefView key={selectedId} domain={data.domain} {...parsed} draft={editedDraft ?? data.draft} onDraftChange={setEditedDraft} onSave={editedDraft !== null && ready ? saveDraft : undefined} saving={!!busy} />
       </> : selectedId ? <p role="status">Loading saved evidence…</p> : <div className="desk-empty"><div className="eyebrow">YOUR NEXT CONVERSATION STARTS HERE</div><h2>Build a brief you<br/>can stand behind.</h2><p>Research a company to see its product, fit against your criteria, possible outreach trigger, and the evidence behind each claim.</p><button className="sb-button secondary" onClick={() => setShowSample(true)}>See a fictional example</button></div>}
     </div>
     {showAuth && <AuthOverlay onClose={() => setShowAuth(false)} />}
   </div>
 }
+
+
 

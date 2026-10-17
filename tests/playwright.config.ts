@@ -10,7 +10,7 @@ import { defineConfig } from '@playwright/test'
  * parallel, give each one a different --port.
  */
 const PORT = Number(process.env.DEEPSPACE_PORT ?? 5173)
-const BASE_URL = `http://localhost:${PORT}`
+const BASE_URL = process.env.SIGNALBRIEF_BASE_URL ?? `http://localhost:${PORT}`
 
 export default defineConfig({
   testDir: '.',
@@ -21,7 +21,7 @@ export default defineConfig({
     baseURL: BASE_URL,
     headless: true,
   },
-  webServer: {
+  webServer: process.env.SIGNALBRIEF_BASE_URL ? undefined : {
     command: `npx vite --port ${PORT} --strictPort --host`,
     cwd: '..',
     // Readiness gates on the auth plane, not just vite: /api/auth/ok only
@@ -35,3 +35,4 @@ export default defineConfig({
     stderr: 'pipe',
   },
 })
+

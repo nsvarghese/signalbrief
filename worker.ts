@@ -7,6 +7,7 @@
 
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
+import { bodyLimit } from 'hono/body-limit'
 import {
   armCronRoom,
   CanvasRoom,
@@ -136,7 +137,12 @@ app.use('*', async (c, next) => {
 // Registration order is part of the worker contract. The wildcard auth route
 // follows its special cases, AI precedes platform proxies, and static is last.
 // Paid integrations are reachable only through bounded app actions.
-app.all('/api/integrations/*', (c) => c.json({ success: false, error: 'Use the research workflow.' }, 403))
+app.use('/api/integrations/*', bodyLimit({ maxSize: 8192 }))
+app.all('/api/integrations/*', async (c) => {
+  // Drain a bounded request body before denying, including in local workerd.
+  if (c.req.method !== 'GET' && c.req.method !== 'HEAD') await c.req.text()
+  return c.json({ success: false, error: 'Use the research workflow.' }, 403)
+})
 registerAuthAndIntegrationRoutes(app)
 registerRealtimeRoutes(app)
 registerActionRoutes(app, resolveAuth)
@@ -158,4 +164,5 @@ registerStaticRoutes(app)
 app.onError(workerErrorHandler('error'))
 
 export default app
+
 

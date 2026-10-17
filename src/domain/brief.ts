@@ -17,7 +17,7 @@ export function normalizeDomain(input: string): string {
 }
 
 export const requestSchema = z.object({
-  domain: z.string().max(300).transform(normalizeDomain),
+  domain: z.string().max(300).transform((value, ctx) => { try { return normalizeDomain(value) } catch (error) { ctx.addIssue({ code: 'custom', message: error instanceof Error ? error.message : 'Enter a public company domain.' }); return z.NEVER } }),
   seller: z.string().trim().min(20, 'Describe your product in at least 20 characters.').max(1200),
   criteria: z.array(z.string().trim().min(5).max(180)).min(1).max(3),
 })
@@ -66,3 +66,4 @@ export function synthesisMessages(input: BriefRequest, sources: Evidence[]) {
     messages: [{ role: 'user' as const, content: JSON.stringify({ request: input, evidence: sources.map(source => ({ ...source, text: source.text.slice(0, 4500) })) }) }],
   }
 }
+

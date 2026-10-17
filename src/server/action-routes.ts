@@ -28,6 +28,7 @@
  */
 
 import type { Hono } from 'hono'
+import { bodyLimit } from 'hono/body-limit'
 import { apiWorkerFetch, normalizeApiError } from 'deepspace/worker'
 import type { ActionResult, ActionTools, VerifyResult } from 'deepspace/worker'
 import { actions } from '../actions/index.js'
@@ -37,6 +38,12 @@ import type { AppContext, Env } from '../../worker.js'
 type ResolveAuth = (req: Request, env: Env) => Promise<VerifyResult | null>
 
 export function registerActionRoutes(app: Hono<AppContext>, resolveAuth: ResolveAuth): void {
+  app.use('/api/actions/*', bodyLimit({ maxSize: 8192 }))
+  app.use('/api/actions/*', async (c, next) => {
+    // Bound and cache the JSON body before any early authentication response.
+    await c.req.text()
+    await next()
+  })
   app.post('/api/actions/:name', async (c) => {
     const auth = await resolveAuth(c.req.raw, c.env)
     if (!auth) return c.json({ error: 'Unauthorized' }, 401)
@@ -122,3 +129,4 @@ function createActionTools(env: Env, userId: string, callerJwt: string): ActionT
     registerUser: (options) => execTool('users.register', { ...options }),
   }
 }
+

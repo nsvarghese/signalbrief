@@ -26,7 +26,7 @@ export function BriefView({ domain, criteria, sources, report, draft, onDraftCha
       </div>)}</div></section>
       <section><h3>A possible reason to reach out</h3><p>{report.trigger.text} {refs(report.trigger.sourceIds)}</p></section>
       <section className="draft-section"><div className="section-heading"><h3>Opening message</h3><span>Draft · review before using</span></div>
-        {onDraftChange ? <textarea aria-label="Edit opening message" value={draft ?? ''} onChange={event => onDraftChange(event.target.value)} maxLength={2000} rows={6} /> : <p className="draft-copy">{report.openingMessage}</p>}
+        {onDraftChange ? <textarea disabled={saving} aria-label="Edit opening message" value={draft ?? ''} onChange={event => onDraftChange(event.target.value)} maxLength={2000} rows={6} /> : <p className="draft-copy">{report.openingMessage}</p>}
         <div className="button-row">{onSave && <button className="sb-button" onClick={onSave} disabled={saving}>{saving ? 'Saving…' : 'Save edits'}</button>}<button className="sb-button secondary" onClick={copy}>{copied ? 'Copied' : 'Copy draft'}</button></div>
         {copyError && <p role="status">Clipboard access is unavailable. Select the message text to copy it.</p>}
       </section>
@@ -38,3 +38,4 @@ export function BriefView({ domain, criteria, sources, report, draft, onDraftCha
     <footer className="paper-footer">SignalBrief / Evidence first. Judgment stays with you.</footer>
   </article>
 }
+

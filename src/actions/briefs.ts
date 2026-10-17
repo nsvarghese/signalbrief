@@ -52,7 +52,7 @@ export const research: ActionHandler<Env> = async ({ userId, params, tools, env 
     }
     if (!sources.length) return { success: false, error: 'No usable company-owned evidence was found. Check the domain or try another company.' }
     const saved = await tools.create('briefs', { domain: input.domain, seller: input.seller, criteriaJson: JSON.stringify(input.criteria), sourcesJson: JSON.stringify(sources), reportJson: '', draft: '', warningsJson: JSON.stringify(warnings) })
-    if (!saved.success) return { success: false, error: 'Research finished, but the brief could not be saved. Please try again.' }
+    if (!saved.success) { console.error('brief-save failed:', saved.error); return { success: false, error: 'Research finished, but the brief could not be saved. Please try again.' } }
     return { success: true, data: { recordId: saved.data.recordId } }
   } catch (error) { return failure(error) }
 }
@@ -77,3 +77,4 @@ export const synthesize: ActionHandler<Env> = async ({ userId, params, tools, en
     return { success: true, data: { recordId } }
   } catch (error) { return failure(error) }
 }
+
