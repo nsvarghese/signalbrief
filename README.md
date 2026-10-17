@@ -6,6 +6,8 @@ Live app: https://signalbrief-nathan.app.space
 
 Repository: https://github.com/nsvarghese/signalbrief
 
+Example outputs: [Vapi, Retool, and LangChain account briefs](docs/examples/README.md), including Nathan's saved Vapi opening-message revision and notes on generated claims that need review.
+
 Enter one company domain, describe what you sell, and supply up to three fit criteria. SignalBrief finds company-owned evidence, assesses fit, proposes a cautious outreach angle, and saves an editable opening message alongside its sources.
 
 ## Run
