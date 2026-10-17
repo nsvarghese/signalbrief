@@ -1,6 +1,14 @@
-# Nathan's review — complete before submission
+# Nathan's review
 
-Status: pending. The agent must not claim these checks were performed by Nathan.
+Confirmed from Nathan's pasted results and follow-up:
+
+- Researched Vapi, Retool, and LangChain in the deployed app using one consistent seller description and three fit criteria.
+- Shared the generated briefs for review with the coding agent.
+- Saved the revised Vapi opening message after that review.
+
+The agent identified unsupported assumptions and an invented seller-experience claim in the generated drafts. Those findings must not be attributed to Nathan independently. Nathan has not separately confirmed opening source excerpts, reloading after the edit, trying invalid inputs, or personally modifying code. Automated persistence and privacy checks were performed by the agent.
+
+Suggested remaining practice:
 
 On the deployed app:
 
@@ -19,14 +27,6 @@ Code walkthrough:
 4. Explain the daily quota's unique-key reservation and why it survives concurrent requests.
 5. Change one recommendation rule in `priority()` and update its test. Run the tests and explain the result.
 
-Record actual outcomes here:
-
-- Company researched:
-- Evidence checked:
-- Misleading or uncertain claim found:
-- Draft edit made:
-- Reload result:
-- Code change personally made or verified:
-- What remains unfinished:
+Only add further personal checks or code changes after Nathan actually performs and confirms them.
 
 Do not paste confidential employer, client, or school information into this app.

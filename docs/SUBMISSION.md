@@ -1,4 +1,4 @@
-# Submission note — working draft
+# Submission note
 
 Live URL: https://signalbrief-nathan.app.space
 
@@ -12,7 +12,7 @@ The main tradeoff was depth on one account over bulk prospecting. I left out CRM
 
 The coding agent implemented the app, tests, and deployment workflow. It also used an independent review to check permissions and draft handling.
 
-[Replace this paragraph with Nathan's actual verification and any personal changes. Do not submit it as a completed claim. See NATHAN_REVIEW.md.]
+I personally tested the deployed app on Vapi, Retool, and LangChain using the same seller description and fit criteria. I reviewed the generated briefs with the agent and saved a revised Vapi opening message that asks about implementation handoffs without assuming an existing pain point. The agent ran the automated checks for input validation, persistence after reload, and private access across two users; those were agent-run tests, not my manual checks.
 
 Known limits: excerpt selection can miss important context; citations are structurally validated but model interpretations still require review; the notebook shows up to fifty saved briefs. Next I would improve source selection and evidence-quality checks.
 

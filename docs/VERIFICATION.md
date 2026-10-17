@@ -13,7 +13,7 @@ Agent checks on October 17, 2026; these are not Nathan's personal verification.
 
 Deployment: https://signalbrief-nathan.app.space. DeepSpace confirmed serving and data plane on release rel_01M55YCQH7YJ9SA3Y0FT35NABC, with GitHub source nsvarghese/signalbrief. Production: 13 ordinary browser checks passed; the real three-provider pipeline, edit/reload, and privacy test passed separately. The initial concurrent production test hit an SDK login-cache write race before making provider calls; one-worker execution resolved it, and the suite now serializes fixture writers.
 
-Nathan's review: pending; see NATHAN_REVIEW.md. The submission note intentionally retains a placeholder for his real checks.
+Nathan personally ran research on Vapi, Retool, and LangChain and confirmed saving the revised Vapi message. These confirmed actions are recorded in NATHAN_REVIEW.md and the submission note. Source inspection, a manual reload check, and personal code changes have not been separately confirmed; automated checks remain attributed to the agent.
 
 
 Output review caught a model role-confusion issue: the seller offering was being attributed to the target company. The synthesis prompt now explicitly separates seller and potential customer, requires unclear for absent evidence, and limits contradicted to direct contrary evidence. This is a prompt correction, not a guarantee of factual model output.
